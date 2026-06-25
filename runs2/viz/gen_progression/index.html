@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CrownGen · 에폭별 크라운 진화</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header>
+  <h1>CrownGen · 에폭별 크라운 진화 <span class="sub" id="subtitle"></span></h1>
+  <div class="nav">
+    <button id="gtToggle" class="on">GT 겹쳐보기 (초록)</button>
+    <button id="flipBtn" title="전체 z축 반전">↕ 위아래 반전</button>
+    <b style="color:#8b949e;font-size:12px">치아:</b><div id="toothSel" class="toggles"></div>
+    <span class="legend">
+      <span class="dot g0"></span>ep1100
+      <span class="dot gN"></span>ep2000
+      <span class="dot gt"></span>GT
+    </span>
+  </div>
+  <div class="hint">왼쪽(초기) → 오른쪽(학습 말기) 패널 순으로 보면, 생성 크라운이 GT(초록)로 수렴하며 다듬어지는 게 보입니다. 드래그=전체 동기화 회전 · 휠=줌. CD×10³는 낮을수록 좋음(논문 ≈34.5).</div>
+</header>
+<main id="panels"></main>
+<footer>
+  <div id="trend"></div>
+</footer>
+<script src="three.min.js"></script>
+<script src="OrbitControls.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+# CrownGen 기본 설정
+# 논문: CrownGen: Patient-customized Crown Generation via Point Diffusion Model
+
+data:
+  raw_dir: "Data/SourceC_Teeth3DS/Teeth3DS_full"
+  processed_dir: "Data/processed"
+  split_file: "Data/SourceC_Teeth3DS/train_val_split.json"
+  n_points: 1024           # 생성 모듈: 치아당 포인트 수
+  n_points_boundary: 512   # 경계 예측: 치아당 포인트 수
+  max_teeth: 28
+  mask_range: [1, 6]       # 1~6개 치아 랜덤 마스킹
+  augmentation:
+    random_shuffle: true
+    bilateral_mirror: true
+    isotropic_scale: [0.95, 1.05]
+
+model:
+  # 입력 특징 차원
+  input_dim: 17             # 3(xyz) + 1(binary) + 8(FDI emb) + 5(boundary)
+  fdi_embed_dim: 8
+  boundary_dim: 5
+
+  # Denoising Network (U-Net)
+  # SA: Set Abstraction (인코더) — 4 레벨
+  sa_channels: [[64, 64], [128, 128], [256, 256], [512, 512]]
+  sa_npoints: [512, 256, 64, 16]
+  sa_voxel_res: [32, 16, 8, 4]
+  sa_radius: [0.2, 0.3, 0.4, 0.5]    # Ball query 반경
+
+  # FP: Feature Propagation (디코더) — 4 레벨
+  fp_channels: [[512, 512], [256, 256], [128, 128], [64, 64]]
+  fp_voxel_res: [4, 8, 16, 32]
+
+  # PVC (Point-Voxel Convolution)
+  pvc_dropout: 0.1
+
+  # DITA (Distance-weighted Inter-Tooth Attention)
+  dita_heads: 8
+  dita_dim: 512             # 보틀넥 특징 차원
+  dita_rpe_hidden: 64       # RPE MLP 은닉 차원
+  dita_num_layers: 9        # 4 SA + 4 FP + 1 보틀넥
+
+  # Time 임베딩
+  time_embed_dim: 128
+
+  # 서브배치 (메모리 관리)
+  tooth_subbatch_size: 7    # 한 번에 처리할 치아 수 (28/7=4 서브배치)
+
+  # Boundary Prediction Module
+  boundary:
+    sa_channels: [[64, 64], [128, 128], [256, 256]]
+    sa_npoints: [256, 64, 16]
+    sa_voxel_res: [16, 8, 4]
+    sa_radius: [0.3, 0.4, 0.5]
+    pvc_dropout: 0.3
+    output_dim: 5            # cx, cy, cz, r, h
+
+diffusion:
+  timesteps: 1000
+  beta_min: 1.0e-4
+  beta_max: 2.0e-2
+  schedule: linear
+
+dpsr:
+  grid_res: 64
+  upsample_factor: 4        # 1024 → 4096 포인트
+
+training:
+  # 공통
+  seed: 42
+  num_workers: 4
+  # EMA (Point-diffusion 품질 핵심). 추론은 EMA 가중치로 샘플링.
+  ema_decay: 0.995          # PVD 기본값
+  ema_warmup: 0             # 초기 N스텝은 shadow=param 으로 빠른 따라감(0=비활성)
+
+  # Boundary 학습
+  boundary:
+    epochs: 1000
+    batch_size: 16
+    lr: 3.0e-4
+    lr_min: 3.0e-6
+    optimizer: adam
+    scheduler: cosine_annealing
+
+  # Stage 1: 완전 치열 학습
+  stage1:
+    epochs: 3000
+    batch_size: 16
+    lr: 4.0e-5
+    lr_decay_epoch: 1500
+    lr_decay_factor: 0.4
+    optimizer: adam
+
+  # Stage 2: 확장 데이터 학습
+  stage2:
+    epochs: 3000            # 논문 2400 → 데이터 작아서 증가
+    batch_size: 16
+    lr: 2.0e-5
+    lr_step_size: 800
+    lr_decay_factor: 0.45
+    optimizer: adam
+
+evaluation:
+  f1_thresholds: [0.3, 0.5, 1.0]  # mm

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CrownGen · Generation 비교 (bound vs nobound)</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header>
+  <h1>CrownGen · 크라운 생성 비교 <span class="sub">— gen2k (boundary O) vs gen2k_nobound (boundary X), 동일 케이스·마스킹·노이즈</span></h1>
+  <div class="nav">
+    <button id="prevCase" title="이전">◀</button>
+    <select id="caseSelect"></select>
+    <span id="caseInfo"></span>
+    <button id="nextCase" title="다음">▶</button>
+    <button id="flipBtn" title="전체 z축 반전(위아래)">↕ 위아래 반전</button>
+    <span class="legend">
+      <span class="dot gt"></span>GT 크라운
+      <span class="dot m1"></span>gen2k 생성
+      <span class="dot m2"></span>nobound 생성
+      <span class="dot ctx"></span>컨텍스트
+    </span>
+  </div>
+  <div class="row"><b>모델:</b><div id="modelToggles" class="toggles"></div></div>
+  <div class="row"><b>타겟 치아:</b><div id="toothToggles" class="toggles"></div></div>
+  <div class="hint">같은 환자의 같은 자리를 두 모델이 어떻게 채웠나 비교. 드래그=회전(양 패널 동기화) · 휠=줌. 초록=GT, 모델 색=생성된 점구름. CD×10³는 낮을수록 좋음(논문 ≈34.5).</div>
+</header>
+<main id="panels"></main>
+<footer>
+  <div id="metrics"></div>
+  <details open><summary>타겟 치아별 CD×10³ (낮을수록 좋음)</summary><div id="paramTable"></div></details>
+</footer>
+<script src="three.min.js"></script>
+<script src="OrbitControls.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CrownGen · Pseudo-crown 시각화</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header>
+  <h1>CrownGen · Pseudo-crown 시각화 <span class="sub">— 3000ep 모델이 빈 자리에 채운 가짜 크라운</span></h1>
+  <div class="nav">
+    <button id="prevCase">◀</button>
+    <select id="caseSelect"></select>
+    <span id="caseInfo"></span>
+    <button id="nextCase">▶</button>
+    <button id="realToggle" class="on">Real 치아</button>
+    <button id="pseudoToggle" class="on">Pseudo 크라운</button>
+    <span class="legend">
+      <span class="dot real"></span>Real(원본)
+      <span class="dot pseudo"></span>Pseudo(생성)
+    </span>
+  </div>
+  <div class="hint">부분무치아 환자의 빈 자리를 3000ep generation 모델이 채운 pseudo-crown(주황)을 real 치아(회색)와 함께 표시. 드래그=회전 · 휠=줌. (GT 없음 — 형태가 그럴듯한지 정성 확인용.)</div>
+</header>
+<main id="panel"></main>
+<footer>
+  <div id="info"></div>
+</footer>
+<script src="three.min.js"></script>
+<script src="OrbitControls.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

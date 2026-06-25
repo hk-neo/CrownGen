@@ -1,0 +1,34 @@
+# === 데이터셋 / 가중치 / 로그 (용량) ===
+Data/
+runs/
+*.pt
+*.pth
+*.npz
+*.log
+
+# === 생성 산출물 (재생성 가능) ===
+data.js
+*.obj
+*.ply
+*.png
+
+# === Python 캐시 ===
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# === 로컬 / 에디터 / OS ===
+.claude/
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# === 논문 콘텐츠 (저작권; 본인 분석 md는 유지) ===
+Docs/*.pdf
+Docs/*.html
+Docs/*.tar.gz
+Docs/images/
+Docs/source/

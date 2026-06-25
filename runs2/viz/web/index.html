@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CrownGen · Boundary 3D Viewer</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header>
+  <h1>CrownGen · Boundary 예측 뷰어 <span class="sub">— 결손 치아 실린더 예측, 런별 side-by-side</span></h1>
+  <div class="nav">
+    <button id="prevCase" title="이전 케이스">◀</button>
+    <select id="caseSelect"></select>
+    <span id="caseInfo"></span>
+    <button id="nextCase" title="다음 케이스">▶</button>
+    <span class="legend">
+      <span class="dot gt"></span>GT
+      <span class="dot pred"></span>예측(런 색)
+      <span class="dot ctx"></span>컨텍스트 치아
+    </span>
+  </div>
+  <div class="row"><b>런:</b><div id="runToggles" class="toggles"></div></div>
+  <div class="row"><b>결손 치아:</b><div id="toothToggles" class="toggles"></div></div>
+  <div class="hint">드래그=회전(모든 패널 동기화) · 휠=줌 · 초록=GT 실린더 · 빨간/유색=예측. 현재 측정 Dice는 런별로 다르며 로그 best-Dice와 차이가 있을 수 있음(voxatt·context는 현 행위에서 예측 품질이 낮음).</div>
+</header>
+<main id="panels"></main>
+<footer>
+  <div id="metrics"></div>
+  <details open><summary>치아별 실린더 파라미터 (cx, cy, cz, h, r)</summary><div id="paramTable"></div></details>
+</footer>
+<script src="three.min.js"></script>
+<script src="OrbitControls.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
