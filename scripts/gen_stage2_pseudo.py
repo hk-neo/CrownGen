@@ -7,12 +7,14 @@ gen2k(2000ep) 모델로 부분무치아 스캔의 빈 치아 자리에 크라운
 import sys, os, json, time
 os.environ.setdefault('CUDA_HOME', '/usr/local/cuda-12.8')
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'scripts'))
 import numpy as np
 import torch
 
 from crowngen.external.gen_diffusion import GenModel, get_betas
 from crowngen.external import BoundEncoder
 from crowngen.data.fdi import ZIGZAG_FDI_ORDER
+from diag_arch_interpolate import interpolate_positions   # ARCH 하이브리드 위치 보간
 
 
 def jaw_of(fdi):
@@ -54,6 +56,9 @@ def main():
     ap.add_argument('--n_points', type=int, default=1024)
     ap.add_argument('--shard', type=int, default=0, help='병렬 샤딩 인덱스')
     ap.add_argument('--nshards', type=int, default=1, help='전체 샤드 수')
+    ap.add_argument('--arch_pos', action='store_true',
+                    help='빈 슬롯 위치를 ARCH 하이브리드로: 내부 결손=아치 보간, 끝자리 결손=boundary. h,r은 boundary.')
+    ap.add_argument('--bound_max_missing', type=int, default=12, help='boundary 모델 max_missing_teeth (G1=12)')
     args = ap.parse_args()
 
     os.makedirs(args.out_dir, exist_ok=True)
@@ -71,10 +76,11 @@ def main():
     gen_model.eval()
     print('gen model loaded (ep', ck.get('ep', '?'), ')', flush=True)
 
-    bnd_model = BoundEncoder(5, 0.3, 6, mask_mode='official').to(device)
+    bnd_model = BoundEncoder(5, 0.3, args.bound_max_missing, mask_mode='official').to(device)
     bnd_model.load_state_dict(torch.load(args.bound_ckpt, map_location=device))
     bnd_model.eval()
-    print('boundary model loaded', flush=True)
+    print(f'boundary model loaded (max_missing={args.bound_max_missing}'
+          f'{", ARCH 하이브리드 위치" if args.arch_pos else ""})', flush=True)
 
     splits = json.load(open(args.split_file))
     # stage2_train split에서 부분무치아(28 미만) 식별 + 완전치열(28) 복사
@@ -128,13 +134,21 @@ def main():
         # boundary 예측 (missing 치아의 경계)
         with torch.no_grad():
             exist_mask = o_mask.view(1, 28, 1, 1)
-            pred_bound = bnd_model(x0, exist_mask)  # (1,28,5)
+            pred_bound = bnd_model(x0, exist_mask)  # (1,28,5) cx,cy,cz,h,r
 
-        # present 치아는 GT bound, missing 치아는 예측 bound
+        # effective bound 구성: present=GT, missing=ARCH 하이브리드(arch_pos) 또는 boundary 예측
+        pb = pred_bound[0].cpu().numpy()           # (28,5)
+        eff = pb.copy()
+        if args.arch_pos:
+            arch = interpolate_positions(valid, bnd, interior_only=True)  # 내부 결손만, 끝자리 NaN
+            for s in range(28):
+                if valid[s] == 0 and not np.isnan(arch[s, 0]):
+                    eff[s, :3] = arch[s, :3]        # 내부 결손: 아치 보간 위치(cx,cy,cz); h,r은 boundary 유지
+        # 끝자리 결손(NaN)은 eff=boundary 그대로
         bound = torch.from_numpy(bnd).unsqueeze(0).to(device).clone()
         for s in range(28):
-            if valid[s] == 0:  # missing → predicted
-                bound[0, s] = pred_bound[0, s]
+            if valid[s] == 0:
+                bound[0, s] = torch.from_numpy(eff[s]).to(device)
 
         # 크라운 샘플링 (missing 치아)
         with torch.no_grad():
@@ -147,9 +161,9 @@ def main():
             if valid[s] == 0:  # missing
                 k = f'{jaw_of(fdi)}_{fdi}_pc'
                 save_dict[k] = gen[s].T.astype(np.float32)  # (P,3)
-                # boundary도 저장 (예측값)
+                # boundary도 저장 (effective 값: ARCH 위치 또는 boundary 예측)
                 bk = k.replace('_pc', '_bound')
-                b = pred_bound[0, s].cpu().numpy()
+                b = eff[s]
                 save_dict[bk] = np.array([b[0], b[1], b[2], b[4], b[3]], dtype=np.float32)  # (cx,cy,cz,r,h)
 
         np.savez_compressed(dst, **save_dict)
