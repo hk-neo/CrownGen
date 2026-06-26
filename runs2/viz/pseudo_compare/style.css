@@ -1,0 +1,21 @@
+* { box-sizing: border-box; }
+body { margin: 0; background: #11151c; color: #e6e9ef;
+       font-family: -apple-system, "Pretendard", "Apple SD Gothic Neo", system-ui, sans-serif; }
+#topbar { display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+          background: #1a2029; border-bottom: 1px solid #2a3340; }
+.ttl { font-size: 15px; font-weight: 600; }
+.spacer { flex: 1; }
+#topbar button, #topbar select { background: #242c38; color: #e6e9ef; border: 1px solid #34404f;
+                                  padding: 6px 10px; border-radius: 6px; font-size: 13px; cursor: pointer; }
+#topbar button:hover { background: #2f3947; }
+.caseinfo { padding: 4px 14px; font-size: 13px; color: #8b95a5; background: #161b22; }
+#stage { display: flex; gap: 2px; height: calc(100vh - 96px); }
+.pane { flex: 1; display: flex; flex-direction: column; }
+.label { padding: 8px 10px; font-size: 12.5px; font-weight: 600; text-align: center; }
+.label.c0 { color: #f6b042; background: #2a2113; border-bottom: 1px solid #3a2c16; }
+.label.c1 { color: #3ddc7e; background: #11291c; border-bottom: 1px solid #163f2a; }
+.label.c2 { color: #36d6e7; background: #11262b; border-bottom: 1px solid #163c44; }
+.panel { flex: 1; overflow: hidden; }
+.info { padding: 8px 14px; font-size: 13px; line-height: 1.7; border-top: 1px solid #2a3340; background: #161b22; }
+.fdi-pill { display: inline-block; background: #2a3340; color: #cfd6e0; padding: 1px 7px;
+            border-radius: 9px; margin: 0 2px; font-size: 11px; }
