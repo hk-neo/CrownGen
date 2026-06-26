@@ -57,9 +57,13 @@ def main():
         if not missing:
             continue
 
-        real_pts = []
+        real_upper = []; real_lower = []
         for s in present:
-            real_pts.extend(downsample(vslots['new'][0].get(s, vslots['old'][0].get(s)), 120).tolist())
+            pts = downsample(vslots['new'][0].get(s, vslots['old'][0].get(s)), 120).tolist()
+            if jaw(ZIGZAG_FDI_ORDER[s]) == 'upper':
+                real_upper.extend(pts)
+            else:
+                real_lower.extend(pts)
 
         def pseudo(slots):
             return [{'slot': int(s), 'fdi': int(ZIGZAG_FDI_ORDER[s]),
@@ -80,7 +84,8 @@ def main():
             return {'ov': ov, 'n': len(missing), 'pct': round(ov / max(1, len(missing)) * 100),
                     'nn': round(float(np.mean(nn)), 3)}
 
-        case = {'patient': pid, 'n_real': len(present), 'n_miss': len(missing), 'real_pts': real_pts}
+        case = {'patient': pid, 'n_real': len(present), 'n_miss': len(missing),
+                'real_upper_pts': real_upper, 'real_lower_pts': real_lower}
         for v in VARIANTS:
             case[v] = pseudo(vslots[v][0])
             case[f'{v}_stat'] = overlap_stats(vslots[v][0])

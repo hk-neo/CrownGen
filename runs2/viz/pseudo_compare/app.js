@@ -3,7 +3,11 @@
 // present=회색(공통). crown 색 = OLD 주황 / NEW 초록 / ARCH 시안.
 // 3패널 회전 동기화. 환자별 겹침% 표시.
 const DATA = window.PCMP_DATA;
-const REAL_COLOR = 0xc8cdd6;
+// 상악/하악 색 구분 (present 치아). crown 은 변형별 색(주황/초록/시안) 유지.
+const UPPER_COLOR = 0xd6dbe2;   // 상악 = 밝은 회색
+const LOWER_COLOR = 0x6c757f;   // 하악 = 어두운 회색
+const ZOFF = 0.4;               // 표시용 z 오프셋 (상악 +ZOFF, 하악 -ZOFF) — 데이터 안 건드림
+let zSep = true;                // 상악/하악 z 분리 (기본 켜짐)
 const VARIANTS = [
   {key: 'old',  color: 0xf39c12, name: 'OLD boundary (official_long)'},
   {key: 'new',  color: 0x2ecc71, name: 'NEW boundary (G1)'},
@@ -44,20 +48,28 @@ function clearScene(scene) {
     if (o.material) o.material.dispose();
   }
 }
-function addPoints(scene, pts, color, size, opacity) {
+function addPoints(scene, pts, color, size, opacity, dz) {
   if (!pts || !pts.length) return;
+  dz = dz || 0;                       // 표시용 z 오프셋만 (데이터不改)
   const flat = new Float32Array(pts.length * 3);
-  for (let i = 0; i < pts.length; i++) { flat[3*i]=pts[i][0]; flat[3*i+1]=pts[i][1]; flat[3*i+2]=pts[i][2]; }
+  for (let i = 0; i < pts.length; i++) { flat[3*i]=pts[i][0]; flat[3*i+1]=pts[i][1]; flat[3*i+2]=pts[i][2]+dz; }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(flat, 3));
   const m = new THREE.PointsMaterial({ color, size, sizeAttenuation: true, transparent: true, opacity });
   scene.add(new THREE.Points(g, m));
 }
+function jawDz(fdi) {                 // 슬롯 FDI → 표시용 z 오프셋
+  if (!zSep) return 0;
+  const q = Math.floor(fdi / 10);
+  return (q === 1 || q === 2) ? ZOFF : -ZOFF;   // 상악 + , 하악 -
+}
 function buildSide(p) {
   clearScene(p.scene);
   const c = DATA.cases[currentCase];
-  addPoints(p.scene, c.real_pts, REAL_COLOR, 0.010, 0.5);
-  for (const ps of c[p.variant.key]) addPoints(p.scene, ps.pts, p.variant.color, 0.016, 0.95);
+  const dzU = zSep ? ZOFF : 0, dzL = zSep ? -ZOFF : 0;
+  addPoints(p.scene, c.real_upper_pts, UPPER_COLOR, 0.010, 0.55, dzU);
+  addPoints(p.scene, c.real_lower_pts, LOWER_COLOR, 0.010, 0.55, dzL);
+  for (const ps of c[p.variant.key]) addPoints(p.scene, ps.pts, p.variant.color, 0.016, 0.95, jawDz(ps.fdi));
 }
 function buildScene() {
   const c = DATA.cases[currentCase];
@@ -102,6 +114,11 @@ for (let i = 0; i < DATA.cases.length; i++) {
 caseSelect.onchange = () => { currentCase = +caseSelect.value; buildScene(); };
 document.getElementById('prevCase').onclick = () => { currentCase = Math.max(0, currentCase - 1); buildScene(); };
 document.getElementById('nextCase').onclick = () => { currentCase = Math.min(DATA.cases.length - 1, currentCase + 1); buildScene(); };
+document.getElementById('zsepToggle').onclick = function () {
+  zSep = !zSep; this.classList.toggle('on', zSep);
+  this.textContent = zSep ? '상악/하악 z분리 ON' : '상악/하악 z분리 OFF';
+  buildScene();
+};
 
 window.addEventListener('resize', resize);
 buildScene();
