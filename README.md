@@ -77,8 +77,13 @@ python scripts/train_boundary_official.py --epochs 1000
 # 3) generation 1단계 (논문 3000ep) → gen3k
 python scripts/gen_train.py --epochs 3000 --batch_size 1
 # 4) pseudo-crown 증식 → 2단계 fine-tune
-python scripts/gen_stage2_pseudo.py --gen_ckpt runs2/gen3k_ep3000.pt
-python scripts/gen_train.py --stage2 1 --resume runs2/gen3k_last.pt --epochs 3000
+#    ARCH 하이브리드 위치(내부 결손=아치 보간, 끝자리=boundary) + G1 boundary
+python scripts/gen_stage2_pseudo.py --gen_ckpt runs2/gen3k_ep3000.pt \
+  --bound_ckpt runs2/boundary_g1_best.pt --arch_pos
+# 주의: resume가 gen3k(ep3000)이라 start_ep=3000. stage2 2400ep = --epochs 5400 (3001~5400).
+# (빈 루프 주의: --epochs 3000으로 하면 학습 안 됨)
+python scripts/gen_train.py --stage2 1 --data_dir Data/processed_stage2 \
+  --resume runs2/gen3k_last.pt --epochs 5400 --batch_size 1 --tag gen_stage2
 # 5) 평가/샘플링
 python scripts/gen_sample.py --ckpt runs2/gen_stage2_last.pt
 ```
