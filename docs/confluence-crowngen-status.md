@@ -70,6 +70,15 @@
 
 ---
 
+## 6. 현재 진행 상태 (stage2 fine-tune 실행 중, 2026-07)
+
+- **stage2 fine-tune 가동 중**: gen_aligned(ep3000) → processed_stage2_aligned(811명 ARCH pseudo-crown)로 fine-tune. 단독 GPU0, B=1, lr 4e-5, **~293s/ep, ETA ~2.6일**(주말+~월요).
+- **주기 CD 평가**: 200ep 단위로 gen_sample (GPU1) → gen_aligned(CD 35.8) 대비 **개선/악화 판단**. **악화 시 조기 종료 + gen_aligned 최종 채택** (pseudo 겹침 hard 케이스 리스크 때문).
+- **DataParallel(B=2) 시도 → 실패 사고 (교훈)**: GPU1 가용해지자 2-GPU DP로 가속 시도 → **CUDA device-side assertion 크래시** → 양 GPU 컨텍스트 **poisoning**(이후 단独 실행도 illegal memory access). 해결 = 크래시/행 프로세스 전부 정리 후 fresh launch (poison 풀림, 리셋·재부팅 불필요). **stage2는 단독 B=1 only** (stage1은 DP 됐으나 stage2 데이터 경로가 B>1에 미대응 추정). 자동 DP 재시작 watcher는 사고 원인이 되므로 **금지**.
+- **결론적 상태**: gen_aligned(1차)만으로 이미 논문 수준(CD 35.8 ≈ 34.5). stage2는 **추가 도약 시도**이며, 주기 평가로 개선 확인되면 채택·아니면 gen_aligned로 회귀.
+
+---
+
 ## 부록: 산출물
 - 모델: `gen_aligned`(1차, CD 35.8), `boundary_aligned`(Dice 0.695).
 - 데이터: `aligned_norm`(811명, 강체 정렬), `processed_stage2_aligned`(811명 pseudo-crown 채움).
