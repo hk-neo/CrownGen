@@ -20,6 +20,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--gen_ckpt', default='runs2/gen3k_ep3000.pt')
     ap.add_argument('--bound_ckpt', default='runs2/boundary_g1_best.pt')
+    ap.add_argument('--bound_max_missing', type=int, default=12)
+    ap.add_argument('--data_dir', default='Data/processed_norm2')
     ap.add_argument('--pids_file', default='/tmp/miss25.txt')
     ap.add_argument('--out_dir', default='Data/processed_stage2')
     args = ap.parse_args()
@@ -35,7 +37,7 @@ def main():
         from crowngen.models.ema import EMA
         ema = EMA(gen.model, 0.995); ema.load_state_dict(ck['ema']); ema.apply_to(gen.model)
     gen.eval()
-    bnd = BoundEncoder(5, 0.3, 12, mask_mode='official').to(device)
+    bnd = BoundEncoder(5, 0.3, args.bound_max_missing, mask_mode='official').to(device)
     bnd.load_state_dict(torch.load(args.bound_ckpt, map_location=device)); bnd.eval()
     print('models loaded', flush=True)
 
@@ -43,7 +45,7 @@ def main():
     ok = fail = 0
     for pid in pids:
         try:
-            src = f'Data/processed_norm2/{pid}.npz'
+            src = f'{args.data_dir}/{pid}.npz'
             if not os.path.exists(src):
                 print(f'  [{pid}] NO norm2'); fail += 1; continue
             pts, b, valid, orig = load_patient(src, 1024)

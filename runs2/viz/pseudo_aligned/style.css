@@ -1,0 +1,16 @@
+* { box-sizing: border-box; }
+body { margin: 0; background: #11151c; color: #e6e9ef;
+       font-family: -apple-system, "Pretendard", "Apple SD Gothic Neo", system-ui, sans-serif; }
+#topbar { display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+          background: #1a2029; border-bottom: 1px solid #2a3340; }
+.ttl { font-size: 14px; font-weight: 600; } .spacer { flex: 1; }
+#topbar button, #topbar select { background: #242c38; color: #e6e9ef; border: 1px solid #34404f;
+                                  padding: 6px 10px; border-radius: 6px; font-size: 13px; cursor: pointer; }
+#topbar button:hover { background: #2f3947; }
+#topbar button.on { background: #1f6f43; border-color: #2fa55c; color: #fff; }
+.caseinfo { padding: 4px 14px; font-size: 13px; color: #8b95a5; background: #161b22; }
+#panel { width: 100vw; height: calc(100vh - 96px); overflow: hidden; }
+.info { position: fixed; bottom: 0; left: 0; right: 0; padding: 8px 14px; font-size: 13px;
+        line-height: 1.8; border-top: 1px solid #2a3340; background: #161b22; }
+.fdi-pill { display: inline-block; background: #2a3340; color: #cfd6e0; padding: 1px 8px;
+            border-radius: 9px; margin: 0 3px; font-size: 11px; font-family: ui-monospace, monospace; }
