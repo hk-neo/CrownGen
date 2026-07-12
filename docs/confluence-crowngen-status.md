@@ -30,7 +30,7 @@
 ### 3-1. pseudo-crown 이란
 - 부분무치아(결손) 환자의 **빈 자리**를 generation 모델(gen_aligned)로 채운 가짜 크라운.
 - **2차 학습(stage2)의 teacher 데이터**로 쓰임 — 완전치열을 흉내낸 확장 데이터셋 구축용.
-- 생성 시 위치는 **ARCH 하이브리드**(내부 결손=아치 보간, 끝자리 결솅=boundary 예측) + 치아 크기(h,r)=boundary.
+- 생성 시 위치는 **ARCH 하이브리드**(내부 결손=아치 보간, 끝자리 결손=boundary 예측) + 치아 크기(h,r)=boundary.
 
 ### 3-2. 문제
 - 결손이 **clustered(인접 다수) / 끝자리**인 hard 케이스에서, pseudo-crown이 **인접 present 치아 위에 겹쳐** 생성됨.

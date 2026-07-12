@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CrownGen · gen_aligned vs stage2 비교</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="topbar">
+  <span class="ttl">gen_aligned(CD 35.8) vs stage2(CD 37.9) — GT(초록) vs 생성(주황)</span>
+  <span class="spacer"></span>
+  <button id="prevCase">◀</button>
+  <select id="caseSelect"></select>
+  <button id="nextCase">▶</button>
+</div>
+<div id="caseInfo" class="caseinfo"></div>
+<div id="stage">
+  <div class="pane"><div class="label c1">gen_aligned (1차, CD 35.8)</div><div id="panel0" class="panel"></div></div>
+  <div class="pane"><div class="label c2">stage2 (CD 37.9)</div><div id="panel1" class="panel"></div></div>
+</div>
+<div id="info" class="info"></div>
+<script src="three.min.js"></script>
+<script src="OrbitControls.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
