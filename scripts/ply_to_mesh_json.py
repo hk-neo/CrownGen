@@ -4,9 +4,34 @@ crown env (python3.11) 로 실행."""
 import os, re, json, glob, sys
 import numpy as np
 import open3d as o3d
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from crowngen.data.fdi import ZIGZAG_FDI_ORDER
 
 SRC = 'runs2/mesh_demo'
 OUT = 'runs2/viz/mesh_demo/data.js'
+NORM = 'Data/aligned_norm'
+
+
+def jaw_of(fdi):
+    return 'upper' if fdi // 10 in (1, 2) else 'lower'
+
+
+def get_real_pts(pid):
+    """환자의 present 치아 점 (회색 컨텍스트)."""
+    path = f'{NORM}/{pid}.npz'
+    if not os.path.exists(path):
+        return []
+    d = np.load(path)
+    pts = []
+    for fdi in ZIGZAG_FDI_ORDER:
+        k = f'{jaw_of(fdi)}_{fdi}_pc'
+        if k in d:
+            pc = d[k]  # (N,3)
+            if len(pc) > 100:
+                idx = np.linspace(0, len(pc) - 1, 100).astype(int)
+                pc = pc[idx]
+            pts.extend(pc.tolist())
+    return pts
 
 
 def parse_ply(path):
@@ -36,7 +61,8 @@ def main():
     cases = []
     for (pid, fdi), meshes in sorted(groups.items()):
         if 'gt' in meshes and 'gen' in meshes:
-            cases.append({'patient': pid, 'fdi': fdi, 'gt': meshes['gt'], 'gen': meshes['gen']})
+            real = get_real_pts(pid)
+            cases.append({'patient': pid, 'fdi': fdi, 'gt': meshes['gt'], 'gen': meshes['gen'], 'real_pts': real})
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, 'w') as f:
