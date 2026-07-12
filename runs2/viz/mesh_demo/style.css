@@ -1,0 +1,9 @@
+* { box-sizing: border-box; }
+body { margin: 0; background: #0d1117; color: #e6edf3; font-family: system-ui, sans-serif; }
+#topbar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #1a2029; border-bottom: 1px solid #2a3340; }
+.ttl { font-size: 14px; font-weight: 600; } .spacer { flex: 1; }
+#topbar button, #topbar select { background: #242c38; color: #e6edf3; border: 1px solid #34404f; padding: 6px 10px; border-radius: 6px; font-size: 13px; cursor: pointer; }
+#topbar button:hover { background: #2f3947; }
+#topbar button.on { background: #1f6f43; border-color: #2fa55c; color: #fff; }
+.info { padding: 6px 14px; font-size: 13px; background: #161b22; border-bottom: 1px solid #2a3340; }
+#panel { width: 100vw; height: calc(100vh - 80px); overflow: hidden; }
