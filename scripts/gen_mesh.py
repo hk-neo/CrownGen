@@ -29,22 +29,24 @@ def load_model(dev):
     m.eval(); return m
 
 
-def poisson_mesh(points, depth=9, smooth=True):
+def poisson_mesh(points, depth=9, smooth_iters=10, decimate_target=0):
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(points.astype(np.float64))
-    pcd.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=0.05, max_nn=30))
+    pcd.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=0.08, max_nn=30))
     pcd.orient_normals_consistent_tangent_plane(15)
-    # 노이즈 제거 (통계적 outlier 제거) → 생성 점구름의 울퉁불퉁 완화
-    pcd, _ = pcd.remove_statistical_outlier(nb_neighbors=20, std_ratio=2.0)
+    # 노이즈 제거 (생성 점은 강하게)
+    pcd, _ = pcd.remove_statistical_outlier(nb_neighbors=30, std_ratio=1.0)
+    pcd, _ = pcd.remove_radius_outlier(nb_points=5, radius=0.03)
     mesh, densities = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(pcd, depth=depth)
-    # density 기반 크롭 (낮은 밀도 영역 제거)
     densities = np.asarray(densities)
     threshold = np.percentile(densities, 5)
-    vertices_to_remove = densities < threshold
-    mesh.remove_vertices_by_mask(vertices_to_remove)
-    # Taubin 평활화 (매끄러운 표면, 수축 최소)
-    if smooth:
-        mesh = mesh.filter_smooth_taubin(number_of_iterations=50)
+    mesh.remove_vertices_by_mask(densities < threshold)
+    # decimation (스파이크 제거: 더 적은 삼각형으로 평균화)
+    if decimate_target > 0 and len(mesh.triangles) > decimate_target:
+        mesh = mesh.simplify_quadric_decimation(decimate_target)
+    # 평활화
+    if smooth_iters > 0:
+        mesh = mesh.filter_smooth_taubin(number_of_iterations=smooth_iters)
         mesh.compute_vertex_normals()
     return mesh
 
@@ -80,8 +82,8 @@ def main():
             gt_pts = pts[s].T  # (P,3) GT
             gen_pts = gen[s].T  # (P,3) 생성
             # Poisson 메시
-            gt_mesh = poisson_mesh(gt_pts)
-            gen_mesh = poisson_mesh(gen_pts)
+            gt_mesh = poisson_mesh(gt_pts, smooth_iters=10, decimate_target=0)
+            gen_mesh = poisson_mesh(gen_pts, smooth_iters=100, decimate_target=2000)
             gt_mesh.compute_vertex_normals(); gen_mesh.compute_vertex_normals()
             gt_path = f'{OUT}/{pid}_FDI{fdi}_gt.ply'
             gen_path = f'{OUT}/{pid}_FDI{fdi}_gen.ply'
