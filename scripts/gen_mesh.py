@@ -29,17 +29,23 @@ def load_model(dev):
     m.eval(); return m
 
 
-def poisson_mesh(points, depth=9):
+def poisson_mesh(points, depth=9, smooth=True):
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(points.astype(np.float64))
     pcd.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=0.05, max_nn=30))
     pcd.orient_normals_consistent_tangent_plane(15)
+    # 노이즈 제거 (통계적 outlier 제거) → 생성 점구름의 울퉁불퉁 완화
+    pcd, _ = pcd.remove_statistical_outlier(nb_neighbors=20, std_ratio=2.0)
     mesh, densities = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(pcd, depth=depth)
     # density 기반 크롭 (낮은 밀도 영역 제거)
     densities = np.asarray(densities)
     threshold = np.percentile(densities, 5)
     vertices_to_remove = densities < threshold
     mesh.remove_vertices_by_mask(vertices_to_remove)
+    # Taubin 평활화 (매끄러운 표면, 수축 최소)
+    if smooth:
+        mesh = mesh.filter_smooth_taubin(number_of_iterations=15)
+        mesh.compute_vertex_normals()
     return mesh
 
 
