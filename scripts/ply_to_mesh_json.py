@@ -7,7 +7,8 @@ import open3d as o3d
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from crowngen.data.fdi import ZIGZAG_FDI_ORDER
 
-SRC = 'runs2/mesh_demo'
+SRC = 'runs2/mesh_dpsr'  # DPSR 메시 (논문 방식)
+MAX_FACES = 15000  # 웹 뷰어용 decimation (DPSR는 100K faces → 15K로 축소)
 OUT = 'runs2/viz/mesh_demo/data.js'
 NORM = 'Data/aligned_norm'
 
@@ -36,6 +37,10 @@ def get_real_pts(pid):
 
 def parse_ply(path):
     mesh = o3d.io.read_triangle_mesh(path)
+    # 웹 뷰어용 decimation (DPSR는 100K faces → MAX_FACES로 축소)
+    if len(mesh.triangles) > MAX_FACES:
+        mesh = mesh.simplify_quadric_decimation(MAX_FACES)
+        mesh.compute_vertex_normals()
     v = np.asarray(mesh.vertices, dtype=np.float32)
     f = np.asarray(mesh.triangles, dtype=np.uint32)
     return v, f
