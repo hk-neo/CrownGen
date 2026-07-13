@@ -44,7 +44,7 @@ def poisson_mesh(points, depth=9, smooth=True):
     mesh.remove_vertices_by_mask(vertices_to_remove)
     # Taubin 평활화 (매끄러운 표면, 수축 최소)
     if smooth:
-        mesh = mesh.filter_smooth_taubin(number_of_iterations=15)
+        mesh = mesh.filter_smooth_taubin(number_of_iterations=50)
         mesh.compute_vertex_normals()
     return mesh
 
