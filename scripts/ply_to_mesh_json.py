@@ -58,11 +58,14 @@ def main():
         groups[key][typ] = {'v': v.tolist(), 'f': fc.tolist()}
         print(f'  {base}: {len(v)}v {len(fc)}f', flush=True)
 
-    cases = []
+    # 환자별로 그룹 (한 화면에 여러 치아 메시 + IOS 아치)
+    by_patient = {}
     for (pid, fdi), meshes in sorted(groups.items()):
         if 'gt' in meshes and 'gen' in meshes:
-            real = get_real_pts(pid)
-            cases.append({'patient': pid, 'fdi': fdi, 'gt': meshes['gt'], 'gen': meshes['gen'], 'real_pts': real})
+            if pid not in by_patient:
+                by_patient[pid] = {'patient': pid, 'teeth': [], 'real_pts': get_real_pts(pid)}
+            by_patient[pid]['teeth'].append({'fdi': fdi, 'gt': meshes['gt'], 'gen': meshes['gen']})
+    cases = list(by_patient.values())
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, 'w') as f:

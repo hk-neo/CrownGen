@@ -39,15 +39,19 @@ function mkMesh(data, color) {
 function build() {
   clr();
   const c = D.cases[cur];
-  if (c.real_pts) addPoints(c.real_pts, 0x8a94a6, 0.008, 0.35);  // 회색 = present 치아 (IOS 아치 컨텍스트)
-  if (showGT) { const m = mkMesh(c.gt, 0x3ddc7e); if (m) scene.add(m); }
-  if (showGen) { const m = mkMesh(c.gen, 0xf6b042); if (m) scene.add(m); }
-  infoEl.innerHTML = `<b>${c.patient}</b> · FDI ${c.fdi} · 회색=IOS 치아(컨텍스트) · GT(초록) ${c.gt.v.length/3}v vs 생성(주황) ${c.gen.v.length/3}v`;
+  if (c.real_pts) addPoints(c.real_pts, 0x8a94a6, 0.008, 0.35);
+  const fdis = [];
+  c.teeth.forEach(t => {
+    if (showGT) { const m = mkMesh(t.gt, 0x3ddc7e); if (m) scene.add(m); }
+    if (showGen) { const m = mkMesh(t.gen, 0xf6b042); if (m) scene.add(m); }
+    fdis.push(t.fdi);
+  });
+  infoEl.innerHTML = `<b>${c.patient}</b> · 치아 ${c.teeth.length}개 (FDI ${fdis.join(', ')}) · 회색=IOS 아치 · 초록=GT 메시 · 주황=생성 메시`;
   sel.value = String(cur); resize();
 }
 function animate() { requestAnimationFrame(animate); con.update(); ren.render(scene, cam); }
 
-for (let i = 0; i < D.cases.length; i++) { const o = document.createElement('option'); o.value = i; o.textContent = `${D.cases[i].patient} FDI${D.cases[i].fdi}`; sel.appendChild(o); }
+for (let i = 0; i < D.cases.length; i++) { const o = document.createElement('option'); o.value = i; o.textContent = D.cases[i].patient; sel.appendChild(o); }
 sel.onchange = () => { cur = +sel.value; build(); };
 document.getElementById('prev').onclick = () => { cur = Math.max(0, cur - 1); build(); };
 document.getElementById('next').onclick = () => { cur = Math.min(D.cases.length - 1, cur + 1); build(); };
