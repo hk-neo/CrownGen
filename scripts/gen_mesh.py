@@ -69,7 +69,7 @@ def main():
     for pid in pids:
         pts, bnd, valid, _ = load_patient(f'{DATA}/{pid}.npz', 1024)
         present = np.where(valid > 0)[0]
-        k = min(args.mask_n, len(present))
+        k = min(random.randint(1, 3), len(present))  # 환자마다 1~3개 랜덤
         idx = np.random.choice(present, k, replace=False)
         x0 = torch.from_numpy(pts).unsqueeze(0).to(dev)
         bound = torch.from_numpy(bnd).unsqueeze(0).to(dev)
