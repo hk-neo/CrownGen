@@ -52,18 +52,29 @@ def load_dpsr(dev):
 
 
 def dpsr_mesh(points, model, dpsr, dev):
-    """점구름 (N,3) → DPSR → mesh (verts, faces). 점을 [0,1]로 정규화 후 DPSR."""
+    """점구름 (N,3) → DPSR 모델(점 정제+법선 예측) → 표준 Poisson(연결 보장) → mesh.
+    DPSR의 MC 대신 표준 Poisson을 써서 분리 조각 없이 하나의 연결된 메시 생성."""
     p_min = points.min(0); p_max = points.max(0)
     scale = p_max - p_min + 1e-8
     p_norm = (points - p_min) / scale  # [0,1]
-    p_t = torch.from_numpy(p_norm.astype(np.float32)).unsqueeze(0).to(dev)  # (1,N,3)
+    p_t = torch.from_numpy(p_norm.astype(np.float32)).unsqueeze(0).to(dev)
     with torch.no_grad():
-        pred_points, pred_normals = model(p_t)
-        psr_grid = dpsr(pred_points, pred_normals)  # (1,1,R,R,R)
-        verts, faces, _ = mc_from_psr(psr_grid, pytorchify=True)
-    verts = verts.cpu().numpy() * scale + p_min  # denormalize
-    faces = faces.cpu().numpy()
-    return verts, faces
+        pred_points, pred_normals = model(p_t)  # DPSR 정제 점 + 예측 법선
+    # DPSR 정제 점+법선 → 표준 Poisson (watertight/연결 보장)
+    pp = (pred_points[0].cpu().numpy() * scale + p_min).astype(np.float64)
+    pn = pred_normals[0].cpu().numpy().astype(np.float64)
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = o3d.utility.Vector3dVector(pp)
+    pcd.normals = o3d.utility.Vector3dVector(pn)
+    # normal 방향 정렬 (일관된 표면을 위해)
+    pcd.orient_normals_towards_camera_location()
+    mesh, densities = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(pcd, depth=9)
+    # 낮은 밀도 영역 제거
+    densities = np.asarray(densities)
+    mesh.remove_vertices_by_mask(densities < np.percentile(densities, 5))
+    v = np.asarray(mesh.vertices, dtype=np.float32)
+    f = np.asarray(mesh.triangles, dtype=np.uint32)
+    return v, f
 
 
 def main():

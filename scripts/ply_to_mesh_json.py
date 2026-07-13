@@ -7,7 +7,7 @@ import open3d as o3d
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from crowngen.data.fdi import ZIGZAG_FDI_ORDER
 
-SRC = 'runs2/mesh_dpsr'  # DPSR 메시 (논문 방식)
+SRC = 'runs2/mesh_demo'  # standard Poisson + Taubin
 MAX_FACES = 15000  # 웹 뷰어용 decimation (DPSR는 100K faces → 15K로 축소)
 OUT = 'runs2/viz/mesh_demo/data.js'
 NORM = 'Data/aligned_norm'
