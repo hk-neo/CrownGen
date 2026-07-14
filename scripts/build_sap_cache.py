@@ -5,7 +5,7 @@
   - pc:      (1024,3) float32   원본 GT 점구름
   - normals: (1024,3) float16   (unused, zeros)
 
- Workflow: GT PC → Open3D Poisson surface recon → DPSR(GT mesh normals) → PSR vol.
+ Workflow: GT PC → Open3D Poisson surface recon (depth=8) → DPSR(GT mesh normals) → PSR vol.
 """
 import gc
 import os, sys, glob
@@ -70,7 +70,7 @@ def make_psr_gt(pc: np.ndarray, dev: torch.device) -> np.ndarray:
 
     Steps:
         1. Estimate + orient point normals via Open3D.
-        2. Poisson surface reconstruction (depth=9, trim bottom 5% density).
+        2. Poisson surface reconstruction (depth=8, trim bottom 5% density).
         3. For each GT point: nearest-vertex on mesh → assign mesh vertex normal.
         4. DPSR with GT-normalised points + mesh-assigned normals → PSR vol.
     """
@@ -82,7 +82,7 @@ def make_psr_gt(pc: np.ndarray, dev: torch.device) -> np.ndarray:
 
     # ── 2. Poisson surface ──────────────────────────────────────────────────
     mesh, densities = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(
-        pcd, depth=9
+        pcd, depth=8
     )
     densities = np.asarray(densities)
     mesh.remove_vertices_by_mask(densities < np.percentile(densities, 5))
@@ -167,7 +167,7 @@ def build_one(pid: str, idx_map: dict, dev: torch.device) -> int:
 
 def main():
     dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f'device={dev} cache={CACHE} res={GRID_RES}^3', flush=True)
+    print(f'device={dev} cache={CACHE} res={GRID_RES}^3 depth=8', flush=True)
 
     files = sorted(glob.glob(f'{NORM}/*.npz'))
     print(f'patients: {len(files)}', flush=True)
