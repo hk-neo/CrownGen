@@ -87,9 +87,6 @@ def make_psr_gt(pc: np.ndarray, dev: torch.device) -> np.ndarray:
     densities = np.asarray(densities)
     mesh.remove_vertices_by_mask(densities < np.percentile(densities, 5))
 
-    del pcd
-    del mesh, densities
-
     # ── 3. Assign mesh vertex normals to GT points ──────────────────────────
     p_min = pc.min(0)
     p_max = pc.max(0)
@@ -106,6 +103,9 @@ def make_psr_gt(pc: np.ndarray, dev: torch.device) -> np.ndarray:
     nn = NearestNeighbors(n_neighbors=1).fit(mesh_v_norm)
     _, idx = nn.kneighbors(pc_norm)
     assigned_n = mesh_n[idx.squeeze(-1)]
+
+    del pcd
+    del mesh, densities
 
     # ── 4. DPSR ─────────────────────────────────────────────────────────────
     # point_rasterize expects (0, 1); pass pc_norm
