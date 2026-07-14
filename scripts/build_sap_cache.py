@@ -7,6 +7,7 @@
 
  Workflow: GT PC → Open3D Poisson surface recon → DPSR(GT mesh normals) → PSR vol.
 """
+import gc
 import os, sys, glob
 
 # mesh_recon package (dpsr, model, utils)
@@ -86,6 +87,9 @@ def make_psr_gt(pc: np.ndarray, dev: torch.device) -> np.ndarray:
     densities = np.asarray(densities)
     mesh.remove_vertices_by_mask(densities < np.percentile(densities, 5))
 
+    del pcd
+    del mesh, densities
+
     # ── 3. Assign mesh vertex normals to GT points ──────────────────────────
     p_min = pc.min(0)
     p_max = pc.max(0)
@@ -113,6 +117,7 @@ def make_psr_gt(pc: np.ndarray, dev: torch.device) -> np.ndarray:
         psr_vol = dpsr(p_t, n_t)  # (1, 64, 64, 64) float
 
     return psr_vol.squeeze(0).cpu().numpy().astype(np.float16)
+    # explicit cleanup of intermediate Open3D objects to avoid memory leak
 
 
 # ── per-patient builder ─────────────────────────────────────────────────────
@@ -151,6 +156,10 @@ def build_one(pid: str, idx_map: dict, dev: torch.device) -> int:
         if saved % 50 == 0:
             print(f'  {pid}: {saved} saved', flush=True)
     print(f'{pid} done: {saved} new', flush=True)
+    gc.collect()
+    if str(dev).startswith('cuda'):
+        import torch
+        torch.cuda.empty_cache()
     return saved
 
 
