@@ -8,7 +8,7 @@ ENV = {**os.environ, 'PYTHONPATH': f'{ROOT}:{ROOT}/crowngen/external:{ROOT}/scri
 LOG = f'{ROOT}/runs2/sap_cache_parallel.log'
 CACHE = f'{ROOT}/runs2/sap_cache'
 NORM = f'{ROOT}/Data/aligned_norm'
-WORKERS = 5
+WORKERS = 10
 
 
 def process_one(pid: str) -> tuple:
