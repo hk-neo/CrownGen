@@ -1,6 +1,6 @@
 """SAP Encode2Points fine-tune on 우리 811명 GT 크라운.
 pytorch3d-free Trainer (원본 training.py는 chamfer_distance 사용)."""
-import os, sys, json, time, argparse
+import os, sys, json, time, argparse, math
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, 'crowngen', 'external'))
@@ -48,11 +48,19 @@ class TrainerLite:
         self.optim.zero_grad()
         inputs = batch['inputs'].to(self.dev)      # (B,1,1024,3) [0,1]
         gt_psr = batch['gt_psr'].to(self.dev)      # (B,1,64,64,64)
-        # Encode2Points.forward takes (B, N, 3) point cloud
+        # NEW: NaN guard for cache corrupt items
+        if torch.isnan(gt_psr).any():
+            return {'psr': float('nan'), 'reg': float('nan'), 'total': float('nan')}
         pred_pc, pred_n = self.model(inputs.squeeze(1))   # (B,1024,3), (B,1024,3)
+        if torch.isnan(pred_pc).any() or torch.isnan(pred_n).any():
+            # skip this batch — let optimizer continue without this step
+            return {'psr': float('nan'), 'reg': float('nan'), 'total': float('nan')}
+        # Encode2Points.forward takes (B, N, 3) point cloud
         pred_pc = torch.clamp(pred_pc, 0, 0.99)
-        if self.cfg['model']['normal_normalize']:
-            pred_n = pred_n / (pred_n.norm(-1, keepdim=True) + 1e-8)
+        n_norm = pred_n.norm(-1, keepdim=True)
+        # Guard against near-zero normals (model outputs magnitude ~1e-5 -> divide gives huge vals)
+        # Instead: clamp the divisor so tiny normals stay small-but-bounded after div
+        pred_n = pred_n / n_norm.clamp(min=1e-3)
         # PSR
         psr_grid = self.dpsr(pred_pc, pred_n)
         if self.cfg['model']['psr_tanh']:
@@ -102,8 +110,9 @@ def main():
         s = {'psr': 0., 'reg': 0., 'total': 0., 'n': 0}
         for batch in train_loader:
             m = trainer.step(batch)
-            for k in ('psr','reg','total'): s[k] += m[k]
-            s['n'] += 1
+            if not math.isnan(m['total']):
+                for k in ('psr','reg','total'): s[k] += m[k]
+                s['n'] += 1
         sched.step()
         # val
         model.eval(); v = 0.; vn = 0
@@ -111,7 +120,9 @@ def main():
             for batch in val_loader:
                 inputs = batch['inputs'].to(dev); gt_psr = batch['gt_psr'].to(dev)
                 pred_pc, pred_n = model(inputs.squeeze(1))
-                psr_grid = torch.tanh(dpsr(torch.clamp(pred_pc,0,0.99), pred_n)) if cfg['model']['psr_tanh'] else dpsr(torch.clamp(pred_pc,0,0.99), pred_n)
+                pred_pc = torch.clamp(pred_pc, 0, 0.99)
+                pred_n = pred_n / (pred_n.norm(-1, keepdim=True) + 1e-8)
+                psr_grid = torch.tanh(dpsr(pred_pc, pred_n)) if cfg['model']['psr_tanh'] else dpsr(pred_pc, pred_n)
                 v += F.mse_loss(psr_grid, torch.tanh(gt_psr.squeeze(1)) if cfg['model']['psr_tanh'] else gt_psr.squeeze(1)).item(); vn += 1
         v /= max(vn,1)
         print(f'ep{ep:02d} t={(time.time()-t0):.1f}s train={s["total"]/max(s["n"],1):.4f} val_psr={v:.4f}', flush=True)

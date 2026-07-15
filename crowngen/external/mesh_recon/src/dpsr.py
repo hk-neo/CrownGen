@@ -31,7 +31,9 @@ class DPSR(nn.Module):
         """
         assert(V.shape == N.shape) # [b, nv, ndims]
         ras_p = point_rasterize(V, N, self.res)  # [b, n_dim, dim0, dim1, dim2]
-        
+        # float64 fix: prevent overflow in Poisson solve when batch is large
+        ras_p = ras_p.double()
+
         ras_s = torch.fft.rfftn(ras_p, dim=(2,3,4))
         ras_s = ras_s.permute(*tuple([0]+list(range(2, self.dim+1))+[self.dim+1, 1]))
         N_ = ras_s[..., None] * self.G # [b, dim0, dim1, dim2/2+1, n_dim, 1]
@@ -63,4 +65,5 @@ class DPSR(nn.Module):
             
             if self.scale:
                 phi = -phi / torch.abs(fv0.view(*tuple([-1]+[1] * self.dim))) *0.5
+        phi = phi.float()
         return phi
