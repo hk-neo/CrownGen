@@ -1,7 +1,19 @@
 <!DOCTYPE html>
 <meta charset="utf-8"/>
-<title>mesh_sap_compare (placeholder)</title>
-<body style="background:#0d1117;color:#e6edf3;font-family:system-ui;padding:32px">
-<h1>3-way mesh comparison (Poisson · SAP-pre · SAP-fine)</h1>
-<p>Tasks 5/6에서 완성됩니다. port 8778.</p>
+<title>SAP fine-tune 3-way comparison · port 8778</title>
+<link rel="stylesheet" href="style.css"/>
+<script src="three.min.js"></script>
+<script src="OrbitControls.js"></script>
+<script src="data.js"></script>
+<body>
+<div class="hdr">
+  <b id="patient"></b>
+  <span>치아 <span id="nd">0</span>개</span>
+  <button id="prev">◀ prev</button>
+  <select id="sel"></select>
+  <button id="next">next ▶</button>
+  <span class="legend"><i style="background:#3fb950"></i>GT&nbsp;&nbsp;<i style="background:#f6b042"></i>gen</span>
+</div>
+<div class="grid" id="grid"></div>
+<script src="app.js"></script>
 </body>
