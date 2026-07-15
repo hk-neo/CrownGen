@@ -8,6 +8,7 @@
  Workflow: GT PC → Open3D Poisson surface recon (depth=8) → DPSR(GT mesh normals) → PSR vol.
 """
 import gc
+import argparse
 import os, sys, glob
 
 # mesh_recon package (dpsr, model, utils)
@@ -166,9 +167,22 @@ def build_one(pid: str, idx_map: dict, dev: torch.device) -> int:
 # ── main ────────────────────────────────────────────────────────────────────
 
 def main():
+    parser = argparse.ArgumentParser(description='SAP PSR GT cache builder')
+    parser.add_argument('--pid', type=str, default=None,
+                        help='Process only this patient ID and exit')
+    args = parser.parse_args()
+
     dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f'device={dev} cache={CACHE} res={GRID_RES}^3 depth=8', flush=True)
 
+    if args.pid is not None:
+        # Single-patient mode: fresh subprocess
+        idx_map = {fdi: i for i, fdi in enumerate(ZIGZAG_FDI_ORDER)}
+        saved = build_one(args.pid, idx_map, dev)
+        print(f'subprocess done: {args.pid} saved={saved}', flush=True)
+        return
+
+    # Batch mode: iterate over all patients (existing behavior)
     files = sorted(glob.glob(f'{NORM}/*.npz'))
     print(f'patients: {len(files)}', flush=True)
 
