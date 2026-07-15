@@ -1,0 +1,846 @@
+{
+  "summary": {
+    "poisson": {
+      "n": 34,
+      "chamfer_mean": 0.018166387313846722,
+      "edge_mean": 0.005442730927650545,
+      "watertight_rate": 0.6764705882352942
+    },
+    "sap_pre": {
+      "n": 34,
+      "chamfer_mean": 0.11098575454663286,
+      "edge_mean": 0.002582236102574575,
+      "watertight_rate": 0.0
+    },
+    "sap_fine": {
+      "n": 34,
+      "chamfer_mean": 0.09830670279557126,
+      "edge_mean": 0.002599353439045351,
+      "watertight_rate": 0.058823529411764705
+    }
+  },
+  "raw": {
+    "poisson": [
+      {
+        "pid": "01FUXUMF",
+        "fdi": 22,
+        "label": "gen",
+        "chamfer": 0.026453621139696192,
+        "edge": 0.005039040960145831,
+        "watertight": 0
+      },
+      {
+        "pid": "01FUXUMF",
+        "fdi": 22,
+        "label": "gt",
+        "chamfer": 0.006376721350429234,
+        "edge": 0.004051533985715805,
+        "watertight": 1
+      },
+      {
+        "pid": "01FUXUMF",
+        "fdi": 36,
+        "label": "gen",
+        "chamfer": 0.02454202969756949,
+        "edge": 0.006400142906786577,
+        "watertight": 0
+      },
+      {
+        "pid": "01FUXUMF",
+        "fdi": 36,
+        "label": "gt",
+        "chamfer": 0.007409832574473795,
+        "edge": 0.006333488082245457,
+        "watertight": 1
+      },
+      {
+        "pid": "01M10NMV",
+        "fdi": 13,
+        "label": "gen",
+        "chamfer": 0.035232841221353395,
+        "edge": 0.007927058627714274,
+        "watertight": 1
+      },
+      {
+        "pid": "01M10NMV",
+        "fdi": 13,
+        "label": "gt",
+        "chamfer": 0.00529032958050308,
+        "edge": 0.0043283006607541755,
+        "watertight": 1
+      },
+      {
+        "pid": "01M10NMV",
+        "fdi": 36,
+        "label": "gen",
+        "chamfer": 0.03818971730997211,
+        "edge": 0.009839044808524813,
+        "watertight": 1
+      },
+      {
+        "pid": "01M10NMV",
+        "fdi": 36,
+        "label": "gt",
+        "chamfer": 0.007430297161357574,
+        "edge": 0.006127099682838474,
+        "watertight": 1
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 17,
+        "label": "gen",
+        "chamfer": 0.027738658407317596,
+        "edge": 0.006495220339913993,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 17,
+        "label": "gt",
+        "chamfer": 0.007177128837617352,
+        "edge": 0.005915566675549571,
+        "watertight": 1
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 21,
+        "label": "gen",
+        "chamfer": 0.03174376993458655,
+        "edge": 0.00682376198452157,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 21,
+        "label": "gt",
+        "chamfer": 0.0088308633418614,
+        "edge": 0.006056564457600228,
+        "watertight": 1
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 25,
+        "label": "gen",
+        "chamfer": 0.025709346405150872,
+        "edge": 0.005883627676030946,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 25,
+        "label": "gt",
+        "chamfer": 0.007623080781044034,
+        "edge": 0.004927775950475076,
+        "watertight": 1
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 33,
+        "label": "gen",
+        "chamfer": 0.03853548235637265,
+        "edge": 0.005344479310637601,
+        "watertight": 1
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 33,
+        "label": "gt",
+        "chamfer": 0.0107436910852026,
+        "edge": 0.005402638470596099,
+        "watertight": 1
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 42,
+        "label": "gen",
+        "chamfer": 0.032866813275749356,
+        "edge": 0.005241967431279836,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 42,
+        "label": "gt",
+        "chamfer": 0.010628445571492947,
+        "edge": 0.004763062683715559,
+        "watertight": 1
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 46,
+        "label": "gen",
+        "chamfer": 0.02036653299251394,
+        "edge": 0.005745365245794476,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 46,
+        "label": "gt",
+        "chamfer": 0.007984131909750197,
+        "edge": 0.006201908180460786,
+        "watertight": 1
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 33,
+        "label": "gen",
+        "chamfer": 0.027646012103034176,
+        "edge": 0.005593166984441847,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 33,
+        "label": "gt",
+        "chamfer": 0.012373951963356864,
+        "edge": 0.005110915965879256,
+        "watertight": 1
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 41,
+        "label": "gen",
+        "chamfer": 0.01808047090222755,
+        "edge": 0.00450198190805104,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 41,
+        "label": "gt",
+        "chamfer": 0.008992788493371519,
+        "edge": 0.004241783457386332,
+        "watertight": 1
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 44,
+        "label": "gen",
+        "chamfer": 0.03396888644476476,
+        "edge": 0.0052841641129977995,
+        "watertight": 1
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 44,
+        "label": "gt",
+        "chamfer": 0.007320622423446523,
+        "edge": 0.004953241106799629,
+        "watertight": 1
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 12,
+        "label": "gen",
+        "chamfer": 0.0343072141988892,
+        "edge": 0.005235929013112494,
+        "watertight": 1
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 12,
+        "label": "gt",
+        "chamfer": 0.006482385377539395,
+        "edge": 0.00467807707904388,
+        "watertight": 1
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 13,
+        "label": "gen",
+        "chamfer": 0.019777539230866736,
+        "edge": 0.004866548569816276,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 13,
+        "label": "gt",
+        "chamfer": 0.007540279848404937,
+        "edge": 0.005269847495412824,
+        "watertight": 1
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 32,
+        "label": "gen",
+        "chamfer": 0.01844313959352424,
+        "edge": 0.004199587405989522,
+        "watertight": 1
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 32,
+        "label": "gt",
+        "chamfer": 0.005962921714895326,
+        "edge": 0.003938464109964795,
+        "watertight": 1
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 41,
+        "label": "gen",
+        "chamfer": 0.027501777179322468,
+        "edge": 0.004247823047749609,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 41,
+        "label": "gt",
+        "chamfer": 0.008385844263130637,
+        "edge": 0.004083673162172065,
+        "watertight": 1
+      }
+    ],
+    "sap_pre": [
+      {
+        "pid": "01FUXUMF",
+        "fdi": 22,
+        "label": "gen",
+        "chamfer": 0.13605120372131482,
+        "edge": 0.0022228074219800497,
+        "watertight": 0
+      },
+      {
+        "pid": "01FUXUMF",
+        "fdi": 22,
+        "label": "gt",
+        "chamfer": 0.08665292459894602,
+        "edge": 0.002123683037099941,
+        "watertight": 0
+      },
+      {
+        "pid": "01FUXUMF",
+        "fdi": 36,
+        "label": "gen",
+        "chamfer": 0.10512453674240259,
+        "edge": 0.003298978226537959,
+        "watertight": 0
+      },
+      {
+        "pid": "01FUXUMF",
+        "fdi": 36,
+        "label": "gt",
+        "chamfer": 0.07908826002480895,
+        "edge": 0.0030621955367671812,
+        "watertight": 0
+      },
+      {
+        "pid": "01M10NMV",
+        "fdi": 13,
+        "label": "gen",
+        "chamfer": 0.1285359314944758,
+        "edge": 0.002158457767117097,
+        "watertight": 0
+      },
+      {
+        "pid": "01M10NMV",
+        "fdi": 13,
+        "label": "gt",
+        "chamfer": 0.13278450924026797,
+        "edge": 0.0022390159777057376,
+        "watertight": 0
+      },
+      {
+        "pid": "01M10NMV",
+        "fdi": 36,
+        "label": "gen",
+        "chamfer": 0.1041221769982145,
+        "edge": 0.0032010785411907905,
+        "watertight": 0
+      },
+      {
+        "pid": "01M10NMV",
+        "fdi": 36,
+        "label": "gt",
+        "chamfer": 0.11824957983559575,
+        "edge": 0.0030351519031755793,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 17,
+        "label": "gen",
+        "chamfer": 0.15071119277436923,
+        "edge": 0.0032850586830885506,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 17,
+        "label": "gt",
+        "chamfer": 0.11372187867972575,
+        "edge": 0.0032435823432104545,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 21,
+        "label": "gen",
+        "chamfer": 0.1418711696607457,
+        "edge": 0.0030673239016972796,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 21,
+        "label": "gt",
+        "chamfer": 0.09611651845731509,
+        "edge": 0.002945337562537505,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 25,
+        "label": "gen",
+        "chamfer": 0.15410445097254633,
+        "edge": 0.0028505005487651806,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 25,
+        "label": "gt",
+        "chamfer": 0.1286786009728735,
+        "edge": 0.0026126826639240115,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 33,
+        "label": "gen",
+        "chamfer": 0.1677197199181714,
+        "edge": 0.002544618192855774,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 33,
+        "label": "gt",
+        "chamfer": 0.14028208519201482,
+        "edge": 0.0023877481751481823,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 42,
+        "label": "gen",
+        "chamfer": 0.04909824990401819,
+        "edge": 0.0026025526550625118,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 42,
+        "label": "gt",
+        "chamfer": 0.04456139317511034,
+        "edge": 0.002218749657881707,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 46,
+        "label": "gen",
+        "chamfer": 0.12052488723725484,
+        "edge": 0.0032677448980883515,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 46,
+        "label": "gt",
+        "chamfer": 0.09643487580538472,
+        "edge": 0.003146849458944136,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 33,
+        "label": "gen",
+        "chamfer": 0.11991135812922268,
+        "edge": 0.0024876747596711472,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 33,
+        "label": "gt",
+        "chamfer": 0.13563524923540077,
+        "edge": 0.002491810799763979,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 41,
+        "label": "gen",
+        "chamfer": 0.12297539706024259,
+        "edge": 0.002100709948161563,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 41,
+        "label": "gt",
+        "chamfer": 0.12451431260040008,
+        "edge": 0.0021593897724721525,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 44,
+        "label": "gen",
+        "chamfer": 0.04966720309401061,
+        "edge": 0.002501503164708229,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 44,
+        "label": "gt",
+        "chamfer": 0.054521350614342004,
+        "edge": 0.002488783576160742,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 12,
+        "label": "gen",
+        "chamfer": 0.11891021189249384,
+        "edge": 0.002860589418130556,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 12,
+        "label": "gt",
+        "chamfer": 0.11432982310908169,
+        "edge": 0.002398396023279951,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 13,
+        "label": "gen",
+        "chamfer": 0.15449056039221337,
+        "edge": 0.0025299556071922344,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 13,
+        "label": "gt",
+        "chamfer": 0.135736822443686,
+        "edge": 0.002466523696847473,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 32,
+        "label": "gen",
+        "chamfer": 0.08360890836659368,
+        "edge": 0.0018964693881369317,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 32,
+        "label": "gt",
+        "chamfer": 0.11139569043754542,
+        "edge": 0.0018223195666338785,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 41,
+        "label": "gen",
+        "chamfer": 0.08665967364952946,
+        "edge": 0.002013697907565522,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 41,
+        "label": "gt",
+        "chamfer": 0.06672494815519817,
+        "edge": 0.0020640867060332285,
+        "watertight": 0
+      }
+    ],
+    "sap_fine": [
+      {
+        "pid": "01FUXUMF",
+        "fdi": 22,
+        "label": "gen",
+        "chamfer": 0.1209008474606387,
+        "edge": 0.0021789555341388835,
+        "watertight": 0
+      },
+      {
+        "pid": "01FUXUMF",
+        "fdi": 22,
+        "label": "gt",
+        "chamfer": 0.08467028737819236,
+        "edge": 0.0021339845924121265,
+        "watertight": 1
+      },
+      {
+        "pid": "01FUXUMF",
+        "fdi": 36,
+        "label": "gen",
+        "chamfer": 0.11174487562901636,
+        "edge": 0.0032191916184616254,
+        "watertight": 0
+      },
+      {
+        "pid": "01FUXUMF",
+        "fdi": 36,
+        "label": "gt",
+        "chamfer": 0.12293991723045,
+        "edge": 0.003109410779994578,
+        "watertight": 0
+      },
+      {
+        "pid": "01M10NMV",
+        "fdi": 13,
+        "label": "gen",
+        "chamfer": 0.10453093430737334,
+        "edge": 0.002391953695745302,
+        "watertight": 0
+      },
+      {
+        "pid": "01M10NMV",
+        "fdi": 13,
+        "label": "gt",
+        "chamfer": 0.10919214837426144,
+        "edge": 0.002396589348237106,
+        "watertight": 0
+      },
+      {
+        "pid": "01M10NMV",
+        "fdi": 36,
+        "label": "gen",
+        "chamfer": 0.1001200608417384,
+        "edge": 0.003185157631713172,
+        "watertight": 0
+      },
+      {
+        "pid": "01M10NMV",
+        "fdi": 36,
+        "label": "gt",
+        "chamfer": 0.12140659144304668,
+        "edge": 0.003048164012955553,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 17,
+        "label": "gen",
+        "chamfer": 0.10802085143796787,
+        "edge": 0.003373099233659439,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 17,
+        "label": "gt",
+        "chamfer": 0.07711120305944649,
+        "edge": 0.0032300407969197992,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 21,
+        "label": "gen",
+        "chamfer": 0.08764044526785103,
+        "edge": 0.0030660991689024585,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 21,
+        "label": "gt",
+        "chamfer": 0.10469425017390176,
+        "edge": 0.003023909852109443,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 25,
+        "label": "gen",
+        "chamfer": 0.10410729225662302,
+        "edge": 0.0027510184891858403,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 25,
+        "label": "gt",
+        "chamfer": 0.11500263232610865,
+        "edge": 0.002706924922493376,
+        "watertight": 1
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 33,
+        "label": "gen",
+        "chamfer": 0.14547960773961524,
+        "edge": 0.002618319445286678,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 33,
+        "label": "gt",
+        "chamfer": 0.15347905402686352,
+        "edge": 0.0025008392524990155,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 42,
+        "label": "gen",
+        "chamfer": 0.04068647619862521,
+        "edge": 0.002379109895564009,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 42,
+        "label": "gt",
+        "chamfer": 0.04633144673836653,
+        "edge": 0.002307995531064036,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 46,
+        "label": "gen",
+        "chamfer": 0.09039970009744375,
+        "edge": 0.0031457701579625896,
+        "watertight": 0
+      },
+      {
+        "pid": "918HS04U",
+        "fdi": 46,
+        "label": "gt",
+        "chamfer": 0.06118043326733883,
+        "edge": 0.003161110671938276,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 33,
+        "label": "gen",
+        "chamfer": 0.11376274182231975,
+        "edge": 0.002619649794301625,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 33,
+        "label": "gt",
+        "chamfer": 0.1450216850467249,
+        "edge": 0.002544238174219304,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 41,
+        "label": "gen",
+        "chamfer": 0.10221116084226574,
+        "edge": 0.002165866241938066,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 41,
+        "label": "gt",
+        "chamfer": 0.16472091311145978,
+        "edge": 0.0022274290843179926,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 44,
+        "label": "gen",
+        "chamfer": 0.047271441063211773,
+        "edge": 0.0024273710009463092,
+        "watertight": 0
+      },
+      {
+        "pid": "9TLHF8TV",
+        "fdi": 44,
+        "label": "gt",
+        "chamfer": 0.04953175860240242,
+        "edge": 0.0025389771753604722,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 12,
+        "label": "gen",
+        "chamfer": 0.09928305264614143,
+        "edge": 0.0026411547756927055,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 12,
+        "label": "gt",
+        "chamfer": 0.10287153000263569,
+        "edge": 0.002370946292419351,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 13,
+        "label": "gen",
+        "chamfer": 0.13115678499248534,
+        "edge": 0.0025350250766001292,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 13,
+        "label": "gt",
+        "chamfer": 0.11245933233954636,
+        "edge": 0.0024908056920379023,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 32,
+        "label": "gen",
+        "chamfer": 0.07422188966133175,
+        "edge": 0.0019438839398740423,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 32,
+        "label": "gt",
+        "chamfer": 0.10956570955882847,
+        "edge": 0.002026572781095209,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 41,
+        "label": "gen",
+        "chamfer": 0.02916906859726412,
+        "edge": 0.0019186041019399864,
+        "watertight": 0
+      },
+      {
+        "pid": "9ZI8RSEP",
+        "fdi": 41,
+        "label": "gt",
+        "chamfer": 0.05154177150793591,
+        "edge": 0.0019998481655555075,
+        "watertight": 0
+      }
+    ]
+  }
+}
