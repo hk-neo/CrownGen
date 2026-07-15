@@ -5,7 +5,8 @@
   - pc:      (1024,3) float32   원본 GT 점구름
   - normals: (1024,3) float16   (unused, zeros)
 
- Workflow: GT PC → Open3D Poisson surface recon (depth=8) → DPSR(GT mesh normals) → PSR vol.
+ Workflow: GT PC → Open3D normals (KDTree radius=0.05, orient) → DPSR(GT normals, no Poisson) → PSR vol.
+ PSR GT = GT point cloud normals → DPSR (no Poisson).
 """
 import gc
 import argparse
@@ -81,44 +82,22 @@ def make_psr_gt(pc: np.ndarray, dev: torch.device) -> np.ndarray:
     pcd.estimate_normals(o3d.geometry.KDTreeSearchParamHybrid(radius=0.05, max_nn=30))
     pcd.orient_normals_consistent_tangent_plane(20)
 
-    # ── 2. Poisson surface ──────────────────────────────────────────────────
-    mesh, densities = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(
-        pcd, depth=8
-    )
-    densities = np.asarray(densities)
-    mesh.remove_vertices_by_mask(densities < np.percentile(densities, 5))
+    # ── SKIP Open3D Poisson — use GT point cloud normals directly
+    gt_n = np.asarray(pcd.normals, dtype=np.float64)
+    # Optional: re-normalize to unit length
+    norms = np.linalg.norm(gt_n, axis=1, keepdims=True) + 1e-8
+    gt_n = gt_n / norms
 
-    # ── 3. Assign mesh vertex normals to GT points ──────────────────────────
-    p_min = pc.min(0)
-    p_max = pc.max(0)
-    scale = (p_max - p_min) + 1e-8
-    pc_norm = (pc - p_min) / scale  # [0, 1]
-    # clip to (0, 1) exclusive upper bound — point_rasterize expects (0, 1)
-    pc_norm = np.clip(pc_norm, 0.0, 1.0 - 1e-6)
-
-    mesh_v = np.asarray(mesh.vertices, dtype=np.float64)
-    mesh_n = np.asarray(mesh.vertex_normals, dtype=np.float64)
-    mesh_v_norm = (mesh_v - p_min) / scale
-    mesh_v_norm = np.clip(mesh_v_norm, 0.0, 1.0)
-
-    nn = NearestNeighbors(n_neighbors=1).fit(mesh_v_norm)
-    _, idx = nn.kneighbors(pc_norm)
-    assigned_n = mesh_n[idx.squeeze(-1)]
-
-    del pcd
-    del mesh, densities
-
-    # ── 4. DPSR ─────────────────────────────────────────────────────────────
-    # point_rasterize expects (0, 1); pass pc_norm
-    p_t = torch.from_numpy(pc_norm.astype(np.float32)).unsqueeze(0).to(dev)
-    n_t = torch.from_numpy(assigned_n.astype(np.float32)).unsqueeze(0).to(dev)
-
-    dpsr = DPSR(res=(GRID_RES, GRID_RES, GRID_RES), sig=DPSR_SIG).to(dev)
+    p_min = pc.min(0); p_max = pc.max(0); scale = (p_max - p_min) + 1e-8
+    p_norm = (pc - p_min) / scale
+    p_norm = np.clip(p_norm, 0.0, 1.0 - 1e-6)  # clip to exclusive upper bound for grid index safety
+    p_t = torch.from_numpy(p_norm.astype(np.float32)).unsqueeze(0).to(dev)
+    n_t = torch.from_numpy(gt_n.astype(np.float32)).unsqueeze(0).to(dev)
+    dpsr = DPSR(res=(GRID_RES, GRID_RES, GRID_RES), sig=2).to(dev)
     with torch.no_grad():
-        psr_vol = dpsr(p_t, n_t)  # (1, 64, 64, 64) float
-
+        psr_vol = dpsr(p_t, n_t)
+    del pcd, dpsr
     return psr_vol.squeeze(0).cpu().numpy().astype(np.float16)
-    # explicit cleanup of intermediate Open3D objects to avoid memory leak
 
 
 # ── per-patient builder ─────────────────────────────────────────────────────
@@ -173,7 +152,7 @@ def main():
     args = parser.parse_args()
 
     dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f'device={dev} cache={CACHE} res={GRID_RES}^3 depth=8', flush=True)
+    print(f'device={dev} cache={CACHE} res={GRID_RES}^3 psr-from-pc-normals (no poisson)', flush=True)
 
     if args.pid is not None:
         # Single-patient mode: fresh subprocess

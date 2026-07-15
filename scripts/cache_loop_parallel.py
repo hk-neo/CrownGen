@@ -1,4 +1,4 @@
-"""5-worker parallel cache build. Each worker processes one patient at a time in a fresh subprocess."""
+"""3-worker parallel cache build. Each worker processes one patient at a time in a fresh subprocess."""
 import os, sys, glob, subprocess, time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
@@ -8,7 +8,7 @@ ENV = {**os.environ, 'PYTHONPATH': f'{ROOT}:{ROOT}/crowngen/external:{ROOT}/scri
 LOG = f'{ROOT}/runs2/sap_cache_parallel.log'
 CACHE = f'{ROOT}/runs2/sap_cache'
 NORM = f'{ROOT}/Data/aligned_norm'
-WORKERS = 10
+WORKERS = 3
 
 
 def process_one(pid: str) -> tuple:
